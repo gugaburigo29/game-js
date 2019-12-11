@@ -20,88 +20,29 @@
 </head>
 <body>
 <canvas id="screen" width="10" height="10"></canvas>
-<script>
+<script type="module">
+    import {Game} from "./src/Game.js";
+    import {KeyBoardListener} from "./src/KeyBoardListener.js";
+    import {Screen} from "./src/Screen.js";
+
     const screen = document.getElementById('screen');
     const context = screen.getContext('2d');
 
-    const game = createGame();
-    const keyBoardListener = createKeyBoardListener();
+
+
+
+
+    const game = Game.create({
+        players: {
+            'player1': {x: 1, y: 1},
+            'player2': {x: 9, y: 9}
+        },
+        fruits: {
+            'fruit1': {x: 3, y: 1}
+        }
+    });
+    const keyBoardListener = KeyBoardListener.create();
     keyBoardListener.subscribe(game.movePlayer);
-
-    function createKeyBoardListener() {
-        const state = {
-            observers: []
-        };
-
-        function subscribe(observedFunction) {
-            state.observers.push(observedFunction);
-        }
-
-        function notifyAll(command) {
-            for (const observedFunction of state.observers) {
-                observedFunction(command)
-            }
-        }
-
-        document.addEventListener('keydown', handleKeydown);
-
-        function handleKeydown(event) {
-            const {key: keyPressed} = event;
-
-            const command = {
-                playerId: 'player1',
-                keyPressed
-            };
-
-            notifyAll(command)
-        }
-
-        return {
-            subscribe
-        }
-    }
-
-    function createGame() {
-        const state = {
-            players: {
-                'player1': {x: 1, y: 1},
-                'player2': {x: 9, y: 9}
-            },
-            fruits: {
-                'fruit1': {x: 3, y: 1}
-            }
-        };
-
-        function movePlayer(command) {
-            const {keyPressed, playerId} = command;
-            const PLAYER_ATUAL = state.players[playerId];
-
-            if (keyPressed === 'ArrowUp' && PLAYER_ATUAL.y - 1 >= 0) {
-                PLAYER_ATUAL.y = PLAYER_ATUAL.y - 1;
-                return;
-            }
-
-            if (keyPressed === 'ArrowDown' && PLAYER_ATUAL.y + 1 < screen.height) {
-                PLAYER_ATUAL.y = PLAYER_ATUAL.y + 1;
-                return;
-            }
-
-            if (keyPressed === 'ArrowRight' && PLAYER_ATUAL.x + 1 < screen.width) {
-                PLAYER_ATUAL.x = PLAYER_ATUAL.x + 1;
-                return;
-            }
-
-            if (keyPressed === 'ArrowLeft' && PLAYER_ATUAL.x - 1 >= 0) {
-                PLAYER_ATUAL.x = PLAYER_ATUAL.x - 1;
-                return;
-            }
-        }
-
-        return {
-            movePlayer,
-            state
-        }
-    }
 
     renderScreen();
 
