@@ -25,12 +25,8 @@
     import {KeyBoardListener} from "./src/KeyBoardListener.js";
     import {Screen} from "./src/Screen.js";
 
-    const screen = document.getElementById('screen');
-    const context = screen.getContext('2d');
-
-
-
-
+    const canvas = document.getElementById('screen');
+    const context = canvas.getContext('2d');
 
     const game = Game.create({
         players: {
@@ -42,28 +38,12 @@
         }
     });
     const keyBoardListener = KeyBoardListener.create();
+    const screen = new Screen({context, state: game.state});
+
     keyBoardListener.subscribe(game.movePlayer);
+    screen.renderScreen();
 
-    renderScreen();
-
-    function renderScreen() {
-        context.fillStyle = 'white';
-        context.fillRect(0, 0, 10, 10);
-
-        for (let playerId in game.state.players) {
-            const player = game.state.players[playerId];
-            context.fillStyle = 'black';
-            context.fillRect(player.x, player.y, 1, 1)
-        }
-
-        for (let fuitId in game.state.fruits) {
-            const fruit = game.state.fruits[fuitId];
-            context.fillStyle = 'green';
-            context.fillRect(fruit.x, fruit.y, 1, 1)
-        }
-
-        requestAnimationFrame(renderScreen)
-    }
+    window.game = game;
 </script>
 </body>
 </html>
