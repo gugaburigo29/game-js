@@ -1,6 +1,6 @@
 import express from "express"
 import http from "http"
-import {createGame} from "./src/game.js";
+import {createGame} from "./public/src/game.js";
 import soketio from "socket.io"
 
 const app = express();
@@ -18,7 +18,6 @@ sockets.on('connection', socket => {
     sockets.emit('setup', game.state);
 
     socket.on('disconnect', socket => {
-        const playerId = socket.id;
         game.removePlayer({playerId})
         sockets.emit('setup', game.state);
     });
